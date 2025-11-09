@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+df = pd.read_csv('../input/iris-dataset/iris.csv')
+df.head(150)
+
+# Univariate for sepal width
+df_Setosa=df.loc[df['variety']=='Setosa']
+df_Virginica=df.loc[df['variety']=='Virginica']
+df_Versicolor=df.loc[df['variety']=='Versicolor']
+plt.scatter(df_Setosa['sepal.width'],np.zeros_like(df_Setosa['sepal.width']))
+plt.scatter(df_Virginica['sepal.width'],np.zeros_like(df_Virginica['sepal.width']))
+plt.scatter(df_Versicolor['sepal.width'],np.zeros_like(df_Versicolor['sepal.width']))
+plt.xlabel('sepal.width')
+plt.show()
+
+# Univariate for sepal length (Code structure similar to sepal width, using 'sepal.length')
+# ...
+
+# Univariate for petal width (Code structure similar to sepal width, using 'petal.width')
+# ...
+
+# Univariate for petal length (Code structure similar to sepal width, using 'petal.length')
+# ...
+
+# Bivariate sepal.width vs petal.width
+sns.FacetGrid(df,hue='variety',size=5).map(plt.scatter,"sepal.width","petal.width").add_legend();
+plt.show()
+
+# Bivariate sepal.length vs petal.length
+sns.FacetGrid(df,hue='variety',size=5).map(plt.scatter,"sepal.length","petal.length").add_legend();
+plt.show()
+
+# Multivariate all the features (using pairplot)
+sns.pairplot(df,hue="variety",size=2)
