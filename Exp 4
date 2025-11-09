@@ -1,0 +1,32 @@
+import numpy as np
+import pandas as pd
+x=np.array([[0,0,1], [0,1,1], [1,0,1], [1,1,1]])
+y=np.array([[0,0,1,1]]).T
+np.random.seed(1)
+weights=2*np.random.random((3,1))-1
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+def sigmoid_derivative(x):
+    return x*(1-x)
+for iteration in range(10000):
+    input_layer=x
+    output=sigmoid(np.dot(input_layer,weights))
+    error=y-output
+    adjustments=error*sigmoid_derivative(output)
+    weights+=np.dot(input_layer.T,adjustments)
+print('Weights after 10000 iterations: ')
+print(weights)
+print("Output after training:")
+print(output)
+x = np.array([[0.5,0.7,0.4], [0.8,0.9,0.3], [0.3,0.5,0.8], [0.9,0.2,0.6]])
+y = np.array([[0,1,0,1]]).T
+for iteration in range(10000):
+    input_layer=x
+    output=sigmoid(np.dot(input_layer,weights))
+    error=y-output
+    adjustments=error*sigmoid_derivative(output)
+    weights+=np.dot(input_layer.T,adjustments)
+print('Weights after 10000 iterations: ')
+print(weights)
+print("Output after training:")
+print(output)
