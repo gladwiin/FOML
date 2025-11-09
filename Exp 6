@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+from mlxtend.plotting import plot_decision_regions
+df = pd.DataFrame()
+df['X1']=[1,2,3,4,5,6,6,7,9,9]
+df['X2']=[5,3,6,8,1,9,5,8,9,2]
+df['label']=[1,1,0,1,0,1,0,1,0,0]
+df['weights']=1/df.shape[0]
+from sklearn.tree import DecisionTreeClassifier
+dt1 = DecisionTreeClassifier(max_depth=1)
+x = df.iloc[:,0:2].values
+y = df.iloc[:,2].values
+dt1.fit(x,y)
+df['y_pred'] = dt1.predict(x)
+def calculate_model_weight(error):
+    return 0.5*np.log((1-error)/(error))
+def update_row_weights(row,alpha=0.423):
+    if row['label'] == row['y_pred']:
+        return row['weights']* np.exp(-alpha)
+    else:
+        return row['weights']* np.exp(alpha)
+df['updated_weights'] = df.apply(update_row_weights,axis=1)
+df['normalized_weights'] = df['updated_weights']/df['updated_weights'].sum()
+df['cumsum_upper'] = np.cumsum(df['normalized_weights'])
+df['cumsum_lower']=df['cumsum_upper'] - df['normalized_weights']
+def create_new_dataset(df):
+    indices= []
+    for i in range(df.shape[0]):
+        a = np.random.random()
+        for index,row in df.iterrows():
+            if row['cumsum_upper']>a and a>row['cumsum_lower']:
+                indices.append(index)
+    return indices
+index_values = create_new_dataset(df)
+second_df = df.iloc[index_values,[0,1,2,3]]
+dt2 = DecisionTreeClassifier(max_depth=1)
+x = second_df.iloc[:,0:2].values
+y = second_df.iloc[:,2].values
+dt2.fit(x,y)
